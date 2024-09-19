@@ -21,21 +21,21 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    // Yeni hesap oluşturma
+    // Creating new Account
     @PostMapping
     public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto accountDto) {
         AccountDto createdAccount = accountService.createAccount(accountDto);
         return new ResponseEntity<>(createdAccount, HttpStatus.CREATED);  // 201 Created
     }
 
-    // Tüm hesapları listeleme
+    // Listing all Accounts
     @GetMapping
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
         List<AccountDto> accounts = accountService.getAllAccounts();
         return new ResponseEntity<>(accounts, HttpStatus.OK);  // 200 OK
     }
 
-    // ID ile hesap bulma
+    // Finding Account by ID
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id) {
         Optional<AccountDto> accountDtoOptional = accountService.getAccountById(id);
@@ -43,14 +43,14 @@ public class AccountController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));  // 404 Not Found
     }
 
-    // Müşteri ID'sine göre hesapları listeleme
+    // Finding accounts by Customer ID
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<AccountDto>> getAccountsByCustomerId(@PathVariable Long customerId) {
         List<AccountDto> accounts = accountService.getAccountsByCustomerId(customerId);
         return new ResponseEntity<>(accounts, HttpStatus.OK);  // 200 OK
     }
 
-    // Hesap güncelleme
+    // Account Updating
     @PutMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
         try {
@@ -61,19 +61,20 @@ public class AccountController {
         }
     }
 
-    // Hesap silme
+    //Deleting Account
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.deleteAccount(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);  // 204 No Content
-        
+      
+    //Decreasing Balance of spesific Account
     }
     @PostMapping("/{id}/decreaseBalance")
     public ResponseEntity<String> decreaseBalance(@PathVariable Long id, @RequestParam Double amount) {
         accountService.decreaseBalance(id, amount);
         return new ResponseEntity<>("Balance decreased", HttpStatus.OK);
     }
-
+    //Increasing Balance of spesific Account
     @PostMapping("/{id}/increaseBalance")
     public ResponseEntity<String> increaseBalance(@PathVariable Long id, @RequestParam Double amount) {
         accountService.increaseBalance(id, amount);

@@ -11,15 +11,15 @@ public class Currency {
     private Long id;
 
     @Column(name = "currency_code", nullable = false, unique = true)
-    private String currencyCode;  // Örneğin: "USD", "TRY", "EUR"
+    private String currencyCode;  // Examples: "USD", "TRY", "EUR"
 
     @Column(name = "exchange_rate_to_try", nullable = false)
-    private Double exchangeRateToTry;  // Bu para biriminin TRY karşısındaki değeri
+    private Double exchangeRateToTry;  // Value of Currency against TRY
 
     // Default constructor
     public Currency() {}
 
-    // Parametreli constructor
+    
     public Currency(String currencyCode, Double exchangeRateToTry) {
         this.currencyCode = currencyCode;
         this.exchangeRateToTry = exchangeRateToTry;

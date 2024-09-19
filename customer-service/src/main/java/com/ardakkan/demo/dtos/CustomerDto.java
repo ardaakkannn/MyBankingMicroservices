@@ -20,7 +20,7 @@ public class CustomerDto {
     public CustomerDto() {
     }
 
-    // Parametreli constructor
+   
     public CustomerDto(Long id, String tcId, AddressDto address, String name, String surname, String email,List<AccountDto> accounts) {
         this.id = id;
         this.tcId = tcId;

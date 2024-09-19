@@ -14,28 +14,28 @@ public class CurrencyExchangeService {
     private CurrencyRepo currencyRepository;
     
     
- // Bir para birimini ekleme
+ // Adding new Currency
     public CurrencyDto addCurrency(CurrencyDto currencyDto) {
-        // DTO'yu Entity'ye dönüştür
+        
         Currency currency = new Currency();
         currency.setCurrencyCode(currencyDto.getCurrencyCode());
         currency.setExchangeRateToTry(currencyDto.getExchangeRateToTry());
 
-        // Veritabanına kaydet
+       
         Currency savedCurrency = currencyRepository.save(currency);
 
-        // Kaydedilen entity'yi DTO'ya dönüştür ve döndür
+        
         return mapToDto(savedCurrency);
     }
 
-    // Bir para biriminden TRY'ye çeviri oranını al
+    
     public CurrencyDto getExchangeRateToTry(String currencyCode) {
         Currency currency = currencyRepository.findByCurrencyCode(currencyCode)
                 .orElseThrow(() -> new RuntimeException("Currency not found: " + currencyCode));
         return mapToDto(currency);
     }
 
-    // Para birimleri arasında çeviri yap (Örneğin TRY to USD)
+    // Converting Currency referancing TRY
     public Double convert(String fromCurrencyCode, String toCurrencyCode, Double amount) {
         Currency fromCurrency = currencyRepository.findByCurrencyCode(fromCurrencyCode)
                 .orElseThrow(() -> new RuntimeException("Currency not found: " + fromCurrencyCode));
@@ -46,8 +46,7 @@ public class CurrencyExchangeService {
         return amount * conversionRate;
     }
 
-    // Entity -> DTO dönüşümü
-    public CurrencyDto mapToDto(Currency currency) {
+        public CurrencyDto mapToDto(Currency currency) {
         return new CurrencyDto(currency.getCurrencyCode(), currency.getExchangeRateToTry());
     }
 }

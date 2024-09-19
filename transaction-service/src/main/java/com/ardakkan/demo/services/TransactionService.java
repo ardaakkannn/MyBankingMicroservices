@@ -14,32 +14,36 @@ import com.ardakkan.demo.repos.TransactionRepository;
 public class TransactionService {
 
     @Autowired
-    private AccountServiceClient accountServiceClient;  // Feign Client ile Account servisine erişim
+    private AccountServiceClient accountServiceClient;  
     @Autowired
-    private TransactionRepository transactionRepository; // Transaction veritabanı kaydı için
+    private TransactionRepository transactionRepository; 
     @Autowired
-    private CurrencyExchangeService currencyExchangeService;  // Kur çevirim servisi
+    private CurrencyExchangeService currencyExchangeService;  
 
-    // Para transferi işlemi
+    
+    // Through atm only TRY can be deposit or withdraw
+    //If customer want to make operations on USD or EUR account, currency is calculated accordingly
+    
+    
     public TransactionDto transfer(Long senderAccountId, Long receiverAccountId, Double amount) {
         AccountDto senderAccount = accountServiceClient.getAccountById(senderAccountId);
         AccountDto receiverAccount = accountServiceClient.getAccountById(receiverAccountId);
 
-        // Aynı para biriminden olmalı
+        
         if (!senderAccount.getCurrency().equals(receiverAccount.getCurrency())) {
             throw new RuntimeException("Currency mismatch: Can only transfer between accounts with the same currency.");
         }
 
-        // Yeterli bakiye var mı kontrolü
+        
         if (senderAccount.getBalance() < amount) {
             throw new RuntimeException("Insufficient balance in sender's account.");
         }
 
-        // Gönderici hesaptan para düş, alıcıya ekle
+        
         accountServiceClient.decreaseBalance(senderAccountId, amount);
         accountServiceClient.increaseBalance(receiverAccountId, amount);
 
-        // İşlemi kaydet
+        
         Transaction transaction = new Transaction();
         transaction.setSenderAccountId(senderAccountId);
         transaction.setReceiverAccountId(receiverAccountId);
@@ -52,22 +56,22 @@ public class TransactionService {
         return mapToDto(savedTransaction);
     }
 
-    // ATM'den para yatırma işlemi (sadece TRY yatırılabilir)
+    
     public TransactionDto deposit(Long accountId, Double amount) {
         AccountDto account = accountServiceClient.getAccountById(accountId);
 
-        // ATM'ye sadece TRY yatırılabilir, USD hesaplarında çeviri yapılmalı
+        
         if (account.getCurrency().equals("USD")) {
-            // TRY to USD çevirimi
+            
             Double exchangedAmount = currencyExchangeService.convert("TRY", "USD", amount);
-            accountServiceClient.increaseBalance(accountId, exchangedAmount);  // Hesaba dönüştürülmüş USD miktarını ekle
+            accountServiceClient.increaseBalance(accountId, exchangedAmount);  
         } else if (account.getCurrency().equals("TRY")) {
-            accountServiceClient.increaseBalance(accountId, amount);  // TRY olarak ekle
+            accountServiceClient.increaseBalance(accountId, amount);  
         } else {
             throw new RuntimeException("Invalid currency for deposit.");
         }
 
-        // İşlemi kaydet
+        // Save transaction
         Transaction transaction = new Transaction();
         transaction.setReceiverAccountId(accountId);
         transaction.setAmount(amount);
@@ -79,26 +83,26 @@ public class TransactionService {
         return mapToDto(savedTransaction);
     }
 
-    // ATM'den para çekme işlemi (sadece TRY çekilebilir)
+    
     public TransactionDto withdraw(Long accountId, Double amount) {
         AccountDto account = accountServiceClient.getAccountById(accountId);
 
-        // ATM'den sadece TRY çekilebilir
+        
         if (!account.getCurrency().equals("TRY")) {
             throw new RuntimeException("ATM withdrawals are only allowed in TRY.");
         }
 
-        // Yeterli bakiye kontrolü
+        
         if (account.getBalance() < amount) {
             throw new RuntimeException("Insufficient balance for withdrawal.");
         }
 
-        // Bakiyeyi düş
+        
         accountServiceClient.decreaseBalance(accountId, amount);
 
-        // İşlemi kaydet
+        
         Transaction transaction = new Transaction();
-        transaction.setSenderAccountId(accountId);  // Çeken hesabı gönderici kabul edelim
+        transaction.setSenderAccountId(accountId);  
         transaction.setAmount(amount);
         transaction.setTransactionType("WITHDRAWAL");
         transaction.setCurrency("TRY");
@@ -108,7 +112,7 @@ public class TransactionService {
         return mapToDto(savedTransaction);
     }
 
-    // Entity -> DTO dönüşümü
+    // Entity -> DTO
     private TransactionDto mapToDto(Transaction transaction) {
         return new TransactionDto(
                 transaction.getId(),

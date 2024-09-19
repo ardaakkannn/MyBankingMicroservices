@@ -12,7 +12,7 @@ public class AccountDto {
     public AccountDto() {
     }
 
-    // Parametreli constructor
+    
     public AccountDto(Long id, String accountType, String currency, Double balance, Long customerId) {
         this.id = id;
         this.accountType = accountType;

@@ -25,21 +25,21 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    // Yeni adres oluşturma
+    // Creating new address
     @PostMapping
     public ResponseEntity<AddressDto> createAddress(@RequestBody AddressDto addressDto) {
         AddressDto createdAddress = addressService.createAddress(addressDto);
         return new ResponseEntity<>(createdAddress, HttpStatus.CREATED); // 201 Created
     }
 
-    // Tüm adresleri listeleme
+    // Listing all adresses
     @GetMapping
     public ResponseEntity<List<AddressDto>> getAllAddresses() {
         List<AddressDto> addresses = addressService.getAllAddresses();
         return new ResponseEntity<>(addresses, HttpStatus.OK); // 200 OK
     }
 
-    // ID ile adres bulma
+    // Find address by ID
     @GetMapping("/{id}")
     public ResponseEntity<AddressDto> getAddressById(@PathVariable Long id) {
         Optional<AddressDto> addressDto = addressService.getAddressById(id);
@@ -47,7 +47,7 @@ public class AddressController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // 404 Not Found
     }
 
-    // Adres güncelleme
+    // Adress updating
     @PutMapping("/{id}")
     public ResponseEntity<AddressDto> updateAddress(@PathVariable Long id, @RequestBody AddressDto addressDto) {
         try {
@@ -58,7 +58,7 @@ public class AddressController {
         }
     }
 
-    // Adres silme
+    // Adress deleting
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable Long id) {
         addressService.deleteAddress(id);

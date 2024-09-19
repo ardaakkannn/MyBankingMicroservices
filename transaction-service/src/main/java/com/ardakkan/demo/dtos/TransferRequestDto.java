@@ -9,7 +9,7 @@ public class TransferRequestDto {
     // Default constructor
     public TransferRequestDto() {}
 
-    // Parametreli constructor
+  
     public TransferRequestDto(Long senderAccountId, Long receiverAccountId, Double amount) {
         this.senderAccountId = senderAccountId;
         this.receiverAccountId = receiverAccountId;

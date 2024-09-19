@@ -7,7 +7,7 @@ import com.ardakkan.demo.dtos.AccountDto;
 
 import java.util.List;
 
-@FeignClient(name = "account-service")  // Account Service'in kayıtlı adı
+@FeignClient(name = "account-service")  // Account Service saved name
 public interface AccountServiceClient {
 
     @GetMapping("/api/accounts/customer/{customerId}")

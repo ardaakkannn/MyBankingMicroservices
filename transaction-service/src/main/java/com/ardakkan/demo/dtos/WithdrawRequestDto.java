@@ -8,7 +8,7 @@ public class WithdrawRequestDto {
     // Default constructor
     public WithdrawRequestDto() {}
 
-    // Parametreli constructor
+    
     public WithdrawRequestDto(Long accountId, Double amount) {
         this.accountId = accountId;
         this.amount = amount;

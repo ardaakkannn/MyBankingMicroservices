@@ -33,33 +33,33 @@ public class CustomerController {
     }
     
     
-    // Müşteri ve hesaplarını müşteri ID'sine göre al
+    //Finding both customer and accounts by Customer ID
     @GetMapping("/{customerId}/accounts")
     public ResponseEntity<CustomerDto> getCustomerWithAccountsById(@PathVariable Long customerId) {
         Optional<CustomerDto> customerDtoOptional = customerService.getCustomerWithAccountsById(customerId);
 
         if (customerDtoOptional.isPresent()) {
-            return new ResponseEntity<>(customerDtoOptional.get(), HttpStatus.OK);  // 200 OK, müşteri bulundu
+            return new ResponseEntity<>(customerDtoOptional.get(), HttpStatus.OK);  // 200 OK
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // 404 Not Found, müşteri bulunamadı
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // 404 Not Found
         }
     }
 
-    // Yeni müşteri oluşturma
+    // Creating new customer
     @PostMapping
     public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
         CustomerDto createdCustomer = customerService.createCustomer(customerDto);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED); // 201 Created
     }
 
-    // Tüm müşterileri listeleme
+    // Listing all Customers
     @GetMapping
     public ResponseEntity<List<CustomerDto>> getAllCustomers() {
         List<CustomerDto> customers = customerService.getAllCustomers();
         return new ResponseEntity<>(customers, HttpStatus.OK); // 200 OK
     }
 
-    // ID ile müşteri bulma
+    // Finding Customer by ID
     @GetMapping("/{id}")
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
         Optional<CustomerDto> customerDto = customerService.getCustomerById(id);
@@ -67,7 +67,7 @@ public class CustomerController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // 404 Not Found
     }
 
-    // Müşteri güncelleme
+    // Updating Customer
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody CustomerDto customerDto) {
         try {
@@ -78,7 +78,7 @@ public class CustomerController {
         }
     }
 
-    // Müşteri silme
+    // Deleting Customer
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);

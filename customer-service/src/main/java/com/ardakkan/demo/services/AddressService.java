@@ -20,29 +20,29 @@ public class AddressService {
     public AddressService(AddressRepo addressRepo) {
         this.addressRepo = addressRepo;
     }
-
-    // Yeni adres oluşturma (AddressDto döner)
+    // All operations returning adress dto
+    // Creating new Address
     public AddressDto createAddress(AddressDto addressDto) {
-        Address address = mapToEntity(addressDto); // DTO -> Entity
-        Address savedAddress = addressRepo.save(address); // Veritabanına kaydet
+        Address address = mapToEntity(addressDto); 
+        Address savedAddress = addressRepo.save(address); 
         return mapToDTO(savedAddress); // Entity -> DTO
     }
 
-    // Tüm adresleri listeleme (List<AddressDto> döner)
+    
     public List<AddressDto> getAllAddresses() {
         return addressRepo.findAll()
                 .stream()
-                .map(this::mapToDTO) // Her bir Address entity'sini DTO'ya çevirir
+                .map(this::mapToDTO) 
                 .collect(Collectors.toList());
     }
 
-    // ID ile adres bulma (AddressDto döner)
+    
     public Optional<AddressDto> getAddressById(Long id) {
         Optional<Address> addressOptional = addressRepo.findById(id);
         return addressOptional.map(this::mapToDTO); // Optional -> DTO
     }
 
-    // Adresi güncelleme (AddressDto döner)
+   
     public AddressDto updateAddress(Long id, AddressDto addressDto) {
         Optional<Address> addressOptional = addressRepo.findById(id);
         if (addressOptional.isPresent()) {
@@ -52,19 +52,19 @@ public class AddressService {
             address.setDistrict(addressDto.getDistrict());
             address.setStreet(addressDto.getStreet());
             address.setZipCode(addressDto.getZipCode());
-            Address updatedAddress = addressRepo.save(address); // Güncellenen adres kaydı
-            return mapToDTO(updatedAddress); // Güncellenen adres -> DTO
+            Address updatedAddress = addressRepo.save(address); 
+            return mapToDTO(updatedAddress); 
         } else {
             throw new RuntimeException("Address not found with id: " + id);
         }
     }
 
-    // Adresi silme
+    
     public void deleteAddress(Long id) {
         addressRepo.deleteById(id);
     }
 
-    // Entity -> DTO dönüşümü
+   
     private AddressDto mapToDTO(Address address) {
         return new AddressDto(
                 address.getId(),
@@ -76,7 +76,7 @@ public class AddressService {
         );
     }
 
-    // DTO -> Entity dönüşümü
+    // DTO -> Entity
     private Address mapToEntity(AddressDto addressDto) {
         return new Address(
                 addressDto.getCountry(),

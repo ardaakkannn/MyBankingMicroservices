@@ -26,7 +26,7 @@ public class Account {
     public Account() {
     }
 
-    // Parametreli constructor
+    
     public Account(Long id, String accountType, String currency, Double balance, Long customerId) {
         this.id = id;
         this.accountType = accountType;

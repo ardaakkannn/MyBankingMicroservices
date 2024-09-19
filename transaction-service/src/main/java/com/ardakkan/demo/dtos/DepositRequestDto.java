@@ -8,7 +8,7 @@ public class DepositRequestDto {
     // Default constructor
     public DepositRequestDto() {}
 
-    // Parametreli constructor
+   
     public DepositRequestDto(Long accountId, Double amount) {
         this.accountId = accountId;
         this.amount = amount;

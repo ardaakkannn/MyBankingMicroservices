@@ -15,18 +15,18 @@ public class CurrencyExchangeController {
     @Autowired
     private CurrencyExchangeService currencyExchangeService;
 
-    // Belirli bir para biriminin TRY karşısındaki kurunu al
+    // Get value of spesific Currency against TRY
     @GetMapping("/{currencyCode}")
     public ResponseEntity<CurrencyDto> getExchangeRateToTry(@PathVariable String currencyCode) {
         try {
             CurrencyDto currencyDto = currencyExchangeService.getExchangeRateToTry(currencyCode);
             return new ResponseEntity<>(currencyDto, HttpStatus.OK);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Kur bulunamazsa 404 döner
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
         }
     }
 
-    // Bir para biriminden başka bir para birimine belirli bir miktarda çeviri yap
+    // Make Currency conversion using TRY as a reference
     @GetMapping("/convert")
     public ResponseEntity<Double> convertCurrency(
             @RequestParam String fromCurrency,
@@ -37,11 +37,11 @@ public class CurrencyExchangeController {
             Double convertedAmount = currencyExchangeService.convert(fromCurrency, toCurrency, amount);
             return new ResponseEntity<>(convertedAmount, HttpStatus.OK);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Dönüştürülemeyen bir hata durumunda 400 döner
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
         }
     }
     
-    
+    // For manually adding Currency
     @PostMapping("/add")
     public ResponseEntity<CurrencyDto> addCurrency(@RequestBody CurrencyDto currencyDto) {
         CurrencyDto savedCurrency = currencyExchangeService.addCurrency(currencyDto);

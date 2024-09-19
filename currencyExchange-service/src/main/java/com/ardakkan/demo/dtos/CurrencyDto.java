@@ -15,7 +15,7 @@ public class CurrencyDto {
     // Default constructor
     public CurrencyDto() {}
 
-    // Parametreli constructor
+    
     public CurrencyDto(String currencyCode, Double exchangeRateToTry) {
         this.currencyCode = currencyCode;
         this.exchangeRateToTry = exchangeRateToTry;

@@ -28,7 +28,7 @@ public class CustomerService {
         this.accountServiceClient = accountServiceClient;
     }
 
-    // Müşteri ID ile müşteri ve hesaplarını bulma
+    // Finding Account bys customer ID
     public Optional<CustomerDto> getCustomerWithAccountsById(Long customerId) {
     	
         Optional<Customer> customerOptional = customerRepo.findById(customerId);
@@ -36,12 +36,12 @@ public class CustomerService {
         if (customerOptional.isPresent()) {
             Customer customer = customerOptional.get();
 
-            // Account Service'ten müşteri hesaplarını al
+           
             List<AccountDto> accounts = accountServiceClient.getAccountsByCustomerId(customerId);
 
-            // Customer entity'sini DTO'ya çevir ve hesapları ekle
+           
             CustomerDto customerDto = mapToDTO(customer);
-            customerDto.setAccounts(accounts); // Hesapları DTO'ya ekle
+            customerDto.setAccounts(accounts); 
 
             return Optional.of(customerDto);
         } else {
@@ -49,28 +49,28 @@ public class CustomerService {
         }
     }
     
-    // Yeni müşteri oluşturma (CustomerDTO döner)
+    
     public CustomerDto createCustomer(CustomerDto customerDTO) {
         Customer customer = mapToEntity(customerDTO); // DTO -> Entity
-        Customer savedCustomer = customerRepo.save(customer); // Veritabanına kaydet
+        Customer savedCustomer = customerRepo.save(customer); 
         return mapToDTO(savedCustomer); // Entity -> DTO
     }
 
-    // Tüm müşterileri listeleme (List<CustomerDTO> döner)
+    
     public List<CustomerDto> getAllCustomers() {
         return customerRepo.findAll()
                 .stream()
-                .map(this::mapToDTO) // Her bir Customer entity'sini DTO'ya çevirir
+                .map(this::mapToDTO) 
                 .collect(Collectors.toList());
     }
 
-    // ID ile müşteri bulma (CustomerDTO döner)
+    
     public Optional<CustomerDto> getCustomerById(Long id) {
         Optional<Customer> customerOptional = customerRepo.findById(id);
-        return customerOptional.map(this::mapToDTO); // Optional -> DTO
+        return customerOptional.map(this::mapToDTO); 
     }
 
-    // Müşteriyi güncelleme (CustomerDTO döner)
+    
     public CustomerDto updateCustomer(Long id, CustomerDto customerDto) {
         Optional<Customer> customerOptional = customerRepo.findById(id);
         if (customerOptional.isPresent()) {
@@ -80,19 +80,19 @@ public class CustomerService {
             customer.setTcId(customerDto.getTcId());
             customer.setEmail(customerDto.getEmail());
             customer.setAddress(mapToAddressEntity(customerDto.getAddress())); // DTO -> Entity (Address)
-            Customer updatedCustomer = customerRepo.save(customer); // Güncellenen müşteri kaydı
-            return mapToDTO(updatedCustomer); // Güncellenen müşteri -> DTO
+            Customer updatedCustomer = customerRepo.save(customer); 
+            return mapToDTO(updatedCustomer); 
         } else {
             throw new RuntimeException("Customer not found with id: " + id);
         }
     }
 
-    // Müşteri silme
+   
     public void deleteCustomer(Long id) {
         customerRepo.deleteById(id);
     }
 
-    // Entity -> DTO dönüşümü
+    // Entity -> DTO 
     private CustomerDto mapToDTO(Customer customer) {
         AddressDto addressDTO = new AddressDto(
                 customer.getAddress().getId(),
@@ -106,7 +106,7 @@ public class CustomerService {
         return new CustomerDto(
                 customer.getId(),
                 customer.getTcId(),
-                addressDTO, // CustomerDTO içinde AddressDTO
+                addressDTO, 
                 customer.getName(),
                 customer.getSurname(),
                 customer.getEmail(),
@@ -114,14 +114,14 @@ public class CustomerService {
         );
     }
 
-    // DTO -> Entity dönüşümü
+    // DTO -> Entity 
     private Customer mapToEntity(CustomerDto customerDTO) {
     	Address address = mapToAddressEntity(customerDTO.getAddress());
 
         return new Customer(
                 customerDTO.getId(),
                 customerDTO.getTcId(),
-                address, // Customer içinde Address
+                address, 
                 customerDTO.getName(),
                 customerDTO.getSurname(),
                 customerDTO.getEmail()

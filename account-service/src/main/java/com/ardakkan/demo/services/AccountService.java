@@ -20,15 +20,15 @@ public class AccountService {
     public AccountService(AccountsRepo accountRepository) {
         this.accountRepository = accountRepository;
     }
-
-    // Yeni hesap oluşturma (AccountDto döner)
+    //All operations are returning Dto s here 
+    // Creating new Account 
     public AccountDto createAccount(AccountDto accountDto) {
         Account account = mapToEntity(accountDto);  // DTO -> Entity
         Account savedAccount = accountRepository.save(account);
         return mapToDTO(savedAccount);  // Entity -> DTO
     }
 
-    // Tüm hesapları listeleme (List<AccountDto> döner)
+    // Listing all Accounts
     public List<AccountDto> getAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
         return accounts.stream()
@@ -36,13 +36,13 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
-    // ID ile hesap bulma (AccountDto döner)
+    
     public Optional<AccountDto> getAccountById(Long id) {
         Optional<Account> accountOptional = accountRepository.findById(id);
         return accountOptional.map(this::mapToDTO);  // Optional -> DTO
     }
 
-    // Müşteri ID'sine göre hesapları listeleme (List<AccountDto> döner)
+    
     public List<AccountDto> getAccountsByCustomerId(Long customerId) {
         List<Account> accounts = accountRepository.findByCustomerId(customerId);
         return accounts.stream()
@@ -50,7 +50,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
-    // Hesap güncelleme (AccountDto döner)
+    
     public AccountDto updateAccount(Long id, AccountDto accountDto) {
         Optional<Account> optionalAccount = accountRepository.findById(id);
         if (optionalAccount.isPresent()) {
@@ -66,7 +66,7 @@ public class AccountService {
         }
     }
 
-    // Hesap silme
+    
     public void deleteAccount(Long id) {
         accountRepository.deleteById(id);
     }
@@ -84,7 +84,7 @@ public class AccountService {
         accountRepository.save(account);
     }
 
-    // Entity -> DTO dönüşümü
+   
     private AccountDto mapToDTO(Account account) {
         return new AccountDto(
                 account.getId(),
@@ -95,7 +95,7 @@ public class AccountService {
         );
     }
 
-    // DTO -> Entity dönüşümü
+    
     private Account mapToEntity(AccountDto accountDto) {
         return new Account(
                 accountDto.getId(),
