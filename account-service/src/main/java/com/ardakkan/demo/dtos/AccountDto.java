@@ -8,11 +8,11 @@ public class AccountDto {
     private Double balance;
     private Long customerId;
 
-    // Default constructor
+    // Default constructor for JPA
     public AccountDto() {
     }
 
-    // Parametreli constructor
+    
     public AccountDto(Long id, String accountType, String currency, Double balance, Long customerId) {
         this.id = id;
         this.accountType = accountType;
